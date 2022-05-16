@@ -1,4 +1,4 @@
-bagFileName = '20220414_NEMI_pm_openloop_thruster_test.bag';
+bagFileName = '../20220414_NEMI_pm_openloop_thruster_test.bag';
 
 %% Load Data
 bag = rosbag(bagFileName);

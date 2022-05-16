@@ -1,4 +1,5 @@
 SampleTime = mean(diff(USV.time));
+PIDSampleTime = 0.1;
 
 %% Longitudinal Feed Forward Table
 speedCommandDelay = 10;                         % SET ME!!!
@@ -224,8 +225,8 @@ plot(100, maxYawRate*18/pi, ...
 %                             FFyawRateCommands, 'pchip');
 desideredYawRates = minYawRate:yawRateStep:maxYawRate;
 FFyawRateCommands = interp1([0 yawRateMeanLevelSteps minYawRate maxYawRate], ...
-                          [0 yawRateCommandLevelSteps -100 100], ...
-                          desideredYawRates, 'pchip');
+                            [0 yawRateCommandLevelSteps -100 100], ...
+                            desideredYawRates, 'pchip');
 plot(FFyawRateCommands, desideredYawRates*18/pi, 'ok');
 title('FeedForward YawRate Table');
 xlabel('u_- | Steer Command Level [%]');
@@ -268,8 +269,8 @@ plot(100, maxYawRate*18/pi, ...
 %                             FFyawRateCommands, 'pchip');
 desideredYawRates = minYawRate:yawRateStep:maxYawRate;
 FFyawRateCommands = interp1([0 yawRateMeanLevelStepsFixed minYawRate maxYawRate], ...
-                          [0 yawRateCommandLevelStepsFixed -100 100], ...
-                          desideredYawRates, 'pchip'); 
+                            [0 yawRateCommandLevelStepsFixed -100 100], ...
+                            desideredYawRates, 'pchip'); 
 plot(FFyawRateCommands, desideredYawRates*18/pi, 'ok');
 clear commandLevel colorMap
 title('FeedForward YawRate Table Fixed');
@@ -305,7 +306,7 @@ orient(fig6,'landscape')
 print(fig6,'LongitudinalDynamicIdentification.pdf','-dpdf')
 
 rangeIndex = USV.time>xlimLowLong & USV.time<xlimHighLong;
-idU = interp1(FFspeedCommands, desideredSpeeds, squeeze(USV.speedCmd.Data(rangeIndex)), 'pchip');
+idU = interp1(FFspeedCommands, desideredSpeeds, squeeze(USV.speedCmd.Data(rangeIndex)),'linear','extrap');
 idY = squeeze(USV.longSpeed.Data(rangeIndex));
 idData = iddata(idY, idU, SampleTime);
 fig7 = figure('Name', 'Longitudinal Dynamic Validation');
@@ -349,7 +350,7 @@ orient(fig8,'landscape')
 print(fig8,'LateralDynamicIdentification.pdf','-dpdf')
 
 rangeIndex = USV.time>xlimLowLat & USV.time<xlimHighLat;
-idU = interp1(FFyawRateCommands, desideredYawRates, squeeze(USV.yawRateCmd.Data(rangeIndex)), 'pchip');
+idU = interp1(FFyawRateCommands, desideredYawRates, squeeze(USV.yawRateCmd.Data(rangeIndex)),'linear','extrap');
 idY = squeeze(USV.yawRate.Data(rangeIndex));
 idData = iddata(idY, idU, SampleTime);
 fig9 = figure('Name', 'Lateral Dynamic Validation');
