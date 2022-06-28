@@ -1,5 +1,5 @@
 loadBag
 getUSV
 %plotUSV
-identificateUSV
+modelIdentificationReport
 open('validateUSV.slx')
